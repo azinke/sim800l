@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map Sim800l
+# by Kenneth AMOUSSOU
+# 	github: @azinke
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Sim800l		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+ping	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+#CM	LITERAL1	Constants
+#INC	LITERAL1	Constants
