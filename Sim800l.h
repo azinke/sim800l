@@ -12,28 +12,21 @@
 #include <Arduino.h>
 #endif
 
-#include <SoftwareSerial.h>
-
 #define SS
 #define RX 10
 #define TX 11
 #define BAUD 9600
 
-
-
 class Sim800l{
     public:
-        Sim800l(uint8_t rx, uint8_t tx);
+        Sim800l();
         // void begin();
         
         bool ping();
         
     private:
-        String _buffer.reserve(255);        // allocate buffer in memory
+        String _buffer;        // allocate buffer in memory
         String _read();
-        #ifdef SS
-            SoftwareSerial _module(RX, TX);
-        #endif
 };
 
 

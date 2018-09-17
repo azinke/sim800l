@@ -6,6 +6,11 @@
         SoftwareSerial
 */
 #include "Sim800l.h"
+#include <SoftwareSerial.h>
+
+#ifdef SS
+    SoftwareSerial _module(RX, TX);
+#endif
 
 /**
     @function: Constructor
@@ -13,6 +18,7 @@
 */
 Sim800l::Sim800l(){
     _module.begin(BAUD);
+    _buffer.reserve(255);
 }
 
 /**
@@ -52,6 +58,6 @@ String Sim800l::_read(){
 bool Sim800l::ping(){
     _module.println(F("at"));
     _buffer = _read();
-    if(_buffer.find("OK")) return true;
+    if(_buffer.indexOf("OK")!= -1) return true;
     else return false;
 }
