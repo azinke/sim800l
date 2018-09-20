@@ -18,7 +18,8 @@
 */
 Sim800l::Sim800l(){
     _module.begin(BAUD);
-    _buffer.reserve(255);
+    _buffer.status = 0;
+    _buffer.result.reserve(255);
 }
 
 /**
@@ -28,23 +29,19 @@ Sim800l::Sim800l(){
     @return:
         String: data read from the serial buffer
 */
-String Sim800l::_read(){
-    // unsigned int timeout = 0;
-    String buffer = "";
-    while(_module.available()){
-        buffer += _module.read();
+RESPONSE Sim800l::_read(){
+    unsigned long timeout = 200;
+    RESPONSE buffer;
+    while(!_module.available() && timeout--){
+        delayMicroseconds(10);
     }
-    /** // reading with timeout
-    while(true){
-        if(_module.available()){
-            _buffer += _module.read();
-            timeout = 0;
-            continue;
-        }
-        timeout++;
-        if(timeout >= 60000) break;
+    if(timeout == 0){
+        buffer.status = 0;
+        buffer.result = "";
+        return buffer;
     }
-    */
+    buffer.status = 1;                      // set status
+    buffer.result = _module.readString();   // write output data
     return buffer;
 }
 
@@ -56,8 +53,10 @@ String Sim800l::_read(){
         bool: return true if response received and false if not
 */
 bool Sim800l::ping(){
-    _module.println(F("at"));
+    _module.print(F("AT\r\n"));
     _buffer = _read();
-    if(_buffer.indexOf("OK")!= -1) return true;
-    else return false;
+    if(_buffer.status){
+        if(_buffer.result.indexOf("OK")!= -1) return true;
+        else return false;
+    }else return false;
 }

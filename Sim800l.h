@@ -17,6 +17,11 @@
 #define TX 11
 #define BAUD 9600
 
+typedef struct {
+    String result;
+    uint8_t status = 0;
+} RESPONSE;
+
 class Sim800l{
     public:
         Sim800l();
@@ -25,8 +30,8 @@ class Sim800l{
         bool ping();
         
     private:
-        String _buffer;        // allocate buffer in memory
-        String _read();
+        RESPONSE _buffer;        // allocate buffer in memory
+        RESPONSE _read();
 };
 
 
