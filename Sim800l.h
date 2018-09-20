@@ -12,6 +12,8 @@
 #include <Arduino.h>
 #endif
 
+#define DEBUG
+
 #define SS
 #define RX 10
 #define TX 11
@@ -28,10 +30,12 @@ class Sim800l{
         // void begin();
         
         bool ping();
+        bool setEchoMode(bool enable);
         
     private:
         RESPONSE _buffer;        // allocate buffer in memory
         RESPONSE _read();
+        inline bool _ack();
 };
 
 
