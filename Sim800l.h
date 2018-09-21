@@ -32,9 +32,23 @@ class Sim800l{
         bool ping();
         bool setEchoMode(bool enable);
         
+        /**
+            AT Commands According to 3GPP TS 27.005
+            SMS
+        */
+        bool deleteAllSMS();
+        bool deleteSMS(uint8_t index);
+        String readSMS(uint8_t index);
+        bool sendSMS(String phone_number, String text);
+        bool setSmsMode(uint8_t mode);
+        bool setSmsFormat(uint8_t format);
+        bool setPreferedSmsStorage(uint8_t storage);
+        bool configureSmsCenter(String number);
+        
+        
     private:
         RESPONSE _buffer;        // allocate buffer in memory
-        RESPONSE _read();
+        RESPONSE _read(unsigned long timeout);  // timeout: multiple of 10µs
         inline bool _ack();
 };
 

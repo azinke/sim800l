@@ -29,8 +29,7 @@ Sim800l::Sim800l(){
     @return:
         String: data read from the serial buffer
 */
-RESPONSE Sim800l::_read(){
-    unsigned long timeout = 200;
+RESPONSE Sim800l::_read(unsigned long timeout = 200){
     RESPONSE buffer;
     while(!_module.available() && timeout--){
         delayMicroseconds(10);
@@ -91,4 +90,17 @@ bool Sim800l::setEchoMode(bool enable){
         _module.print(F("ATE0\r\n"));
         return _ack();
     }
+}
+
+/**
+    function: deleteAllSMS
+    @summary: delete all message from memory
+              This function only handle text mode message
+    @parameter: none
+    @return:
+        bool: return true if response received and false if not
+*/
+bool Sim800l::deleteAllSMS(){
+    _module.print(F("AT+CMGDA=\"DEL ALL\"\r\n"));
+    return _ack();
 }
