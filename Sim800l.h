@@ -37,13 +37,20 @@ class Sim800l{
             SMS
         */
         bool deleteAllSMS();
-        bool deleteSMS(uint8_t index);
+        bool deleteSMS(uint8_t index, uint8_t delflag);
         String readSMS(uint8_t index);
         bool sendSMS(String phone_number, String text);
-        bool setSmsMode(uint8_t mode);
         bool setSmsFormat(uint8_t format);
         bool setPreferedSmsStorage(uint8_t storage);
         bool configureSmsCenter(String number);
+        
+        bool setAdressType(uint8_t type);   // page 70
+        uint8_t status();
+        String findPhonebookEntry(String text);
+        String readPhonebookEntry(uint8_t index1, uint8_t index2);
+        bool setPhonebookMemoryStorage(uint8_t storage);    // page 84
+        bool writePhonebookEntry(String name, String number, uint8_t index); // page 86
+        
         
         
     private:
