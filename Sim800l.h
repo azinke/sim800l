@@ -24,6 +24,14 @@ typedef struct {
     uint8_t status = 0;
 } RESPONSE;
 
+typedef struct {
+    String status;
+    String number;
+    String date;
+    String time;
+    String content;
+} SMS;
+
 class Sim800l{
     public:
         Sim800l();
@@ -52,7 +60,7 @@ class Sim800l{
         bool writePhonebookEntry(String name, String number, uint8_t index); // page 86
         
         // helper
-        
+        SMS parseSMS(String sms);
         
     private:
         RESPONSE _buffer;        // allocate buffer in memory

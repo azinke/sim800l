@@ -192,6 +192,36 @@ String Sim800l::readSMS(uint8_t index, uint8_t mode = 0){
 }
 
 /**
+    function: parseSMS
+    @summary: get out of an sms read from memory useful informations such as
+              date, time, sender's number, status and sms content
+    @parameter:
+        sms: raw sms read from the module
+    @return:
+        SMS: parsed SMS
+*/
+SMS Sim800l::parseSMS(String sms){
+    SMS parsedSMS;
+    uint8_t idx1 = 0;
+    uint8_t idx2 = 0;
+    idx1 = sms.indexOf("\",\"");
+    idx2 = sms.indexOf("\",\"", idx1+3);
+    parsedSMS.status = sms.substring(0, idx1);
+    parsedSMS.number = sms.substring(idx1+3, idx2);
+    idx1 = sms.indexOf("\",\"",idx2 + 2);
+    idx2 = sms.indexOf("\"", idx1 + 3);
+    parsedSMS.date = sms.substring(idx1 + 3, idx2);
+    idx1 = parsedSMS.date.indexOf(",");
+    parsedSMS.time = parsedSMS.date.substring(idx1+1);
+    parsedSMS.date = parsedSMS.date.substring(0, idx1);
+    parsedSMS.content = sms.substring(idx2 + 2);
+    idx1 = parsedSMS.content.indexOf("OK");
+    parsedSMS.content = parsedSMS.content.substring(0, idx1);
+    parsedSMS.content.trim();
+    return parsedSMS;
+}
+
+/**
     function: sendSMS
     @summary: send an SMS to a specific phone number
     @parameter:
