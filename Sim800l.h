@@ -51,6 +51,7 @@ class Sim800l{
         bool setPhonebookMemoryStorage(uint8_t storage);    // page 84
         bool writePhonebookEntry(String name, String number, uint8_t index); // page 86
         
+        // helper
         
         
     private:

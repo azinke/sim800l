@@ -151,7 +151,7 @@ bool Sim800l::deleteSMS(uint8_t index, uint8_t delflag = 0){
         bool: return true if response received and false if not
 */
 bool Sim800l::setSmsFormat(uint8_t format){
-    if(format ==  0){
+    if(format == 0){
         _module.print(F("AT+CMGF=0\r\n"));
         _buffer = _read();
         return _ack();
@@ -176,15 +176,19 @@ bool Sim800l::setSmsFormat(uint8_t format){
 */
 String Sim800l::readSMS(uint8_t index, uint8_t mode = 0){
     if(mode > 1) return "";
-    setSmsFormat(1);    // text mode
-    _module.print(F("AT+CMGR="));
-    _module.print(String(index));
-    _module.print(F(","));
-    _module.print(String(mode));
-    _module.print(F("\r\n"));
-    _buffer = _read(5000000); // ~5s of response time
-    uint8_t idx = _buffer.result.indexOf("+CMGR:");
-    return _buffer.result.substring(idx+6);
+    if(setSmsFormat(1)){    // text mode
+        _module.print(F("AT+CMGR="));
+        _module.print(String(index));
+        _module.print(F(","));
+        _module.print(String(mode));
+        _module.print(F("\r\n"));
+        _buffer = _read(5000000); // ~5s of response time
+        #ifdef DEBUG
+            Serial.println(_buffer.result);
+        #endif  
+        uint8_t idx = _buffer.result.indexOf("+CMGR:");
+        return _buffer.result.substring(idx+6);
+    }else return "";
 }
 
 /**
