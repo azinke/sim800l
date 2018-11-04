@@ -15,8 +15,8 @@
 #define DEBUG
 
 #define SS
-#define RX 10
-#define TX 11
+#define RX 7   // 10
+#define TX 8   // 11
 #define BAUD 9600
 
 typedef struct {
@@ -38,7 +38,7 @@ class Sim800l{
         */
         bool deleteAllSMS();
         bool deleteSMS(uint8_t index, uint8_t delflag);
-        String readSMS(uint8_t index);
+        String readSMS(uint8_t index, uint8_t mode = 0);
         bool sendSMS(String phone_number, String text);
         bool setSmsFormat(uint8_t format);
         bool setPreferedSmsStorage(uint8_t storage);

@@ -131,7 +131,11 @@ bool Sim800l::deleteAllSMS(){
 */
 bool Sim800l::deleteSMS(uint8_t index, uint8_t delflag = 0){
     if(delflag > 4) return false;
-    _module.print(F("AT+CMGD="+ String(index) + "," + String(delflag) + "\r\n"));
+    _module.print(F("AT+CMGD="));
+    _module.print(String(index));
+    _module.print(F(","));
+    _module.print(String(delflag));
+    _module.print(F("\r\n"));
     _buffer = _read(25000000);   // ~25s of response time
     return _ack();
 }
@@ -173,7 +177,11 @@ bool Sim800l::setSmsFormat(uint8_t format){
 String Sim800l::readSMS(uint8_t index, uint8_t mode = 0){
     if(mode > 1) return "";
     setSmsFormat(1);    // text mode
-    _module.print(F("AT+CMGR="+ String(index) + ","+ String(mode) +"\r\n"));
+    _module.print(F("AT+CMGR="));
+    _module.print(String(index));
+    _module.print(F(","));
+    _module.print(String(mode));
+    _module.print(F("\r\n"));
     _buffer = _read(5000000); // ~5s of response time
     uint8_t idx = _buffer.result.indexOf("+CMGR:");
     return _buffer.result.substring(idx+6);
@@ -190,11 +198,14 @@ String Sim800l::readSMS(uint8_t index, uint8_t mode = 0){
 */
 bool Sim800l::sendSMS(String phone_number, String text){
     if(setSmsFormat(1)){    // text mode
-        _module.print(F("AT+CMGS=\"" + String(index) + "\"\r"));
-        _module.print(F(text + "\r"));
+        _module.print(F("AT+CMGS=\""));
+        _module.print(String(phone_number));
+        _module.print(F("\"\r"));
+        _module.print(text);
+        _module.print(F("\r"));
         _module.print((char)26);
         _buffer = _read(60000000); // ~60s of response time
-        if(_buffer.result.indexOf("+CMGS") != -1) return true
+        if(_buffer.result.indexOf("+CMGS") != -1) return true;
         else return false;
     }else return false;
 }
@@ -249,7 +260,9 @@ bool Sim800l::setPreferedSmsStorage(uint8_t storage = 0){
         bool: return true if response received and false if not
 */
 bool Sim800l::configureSmsCenter(String number){
-    _module.print(F("AT+CSCA=\"" + String(index) + "\"\r\n"));
+    _module.print(F("AT+CSCA=\""));
+    _module.print(String(number));
+    _module.print(F("\"\r\n"));
     _buffer = _read(5000000); // ~5s of response time
     return _ack();
 }
@@ -281,8 +294,10 @@ uint8_t Sim800l::status(){
     @return:
         String: 
 */
-String findPhonebookEntry(String text){
-    _module.print(F("AT+CPBF=\""+ text +"\"\r\n"));
+String Sim800l::findPhonebookEntry(String text){
+    _module.print(F("AT+CPBF=\""));
+    _module.print(text);
+    _module.print(F("\"\r\n"));
     _buffer = _read();
     return _buffer.result;
 }
@@ -297,11 +312,17 @@ String findPhonebookEntry(String text){
     @return:
         String: phonebook entry information
 */
-String readPhonebookEntry(uint8_t index1, uint8_t index2 = 0){
+String Sim800l::readPhonebookEntry(uint8_t index1, uint8_t index2 = 0){
     if(index2){
-        _module.print(F("AT+CPBR="+ String(index1) + "," + String(index2) +"\r\n"));
+        _module.print(F("AT+CPBR="));
+        _module.print(String(index1));
+        _module.print(F(","));
+        _module.print(String(index2));
+        _module.print(F("\r\n"));
     }else{
-        _module.print(F("AT+CPBR="+ String(index1) +"\r\n"));
+        _module.print(F("AT+CPBR="));
+        _module.print(String(index1));
+        _module.print(F("\r\n"));
     }
     _buffer = _read();
     return _buffer.result;
@@ -319,7 +340,7 @@ String readPhonebookEntry(uint8_t index1, uint8_t index2 = 0){
     @return:
         String: phonebook entry information
 */
-bool setPhonebookMemoryStorage(uint8_t storage = 0){
+bool Sim800l::setPhonebookMemoryStorage(uint8_t storage = 0){
     if(storage > 2) return false;
     switch(storage){
         case 0:{
@@ -349,14 +370,21 @@ bool setPhonebookMemoryStorage(uint8_t storage = 0){
     @return:
         bool: return true if response received and false if not
 */
-bool writePhonebookEntry(String name, String number, uint8_t index = 0){
+bool Sim800l::writePhonebookEntry(String name, String number, uint8_t index = 0){
     _module.print(F("AT+CPBW="));
-    if(index != 0) _module.print(F(String(index) + ","));
-    _module.print(F("\""+ number +"\""));
+    if(index != 0){
+        _module.print(String(index));
+        _module.print(F(","));
+    }
+    _module.print(F("\""));
+    _module.print(number);
+    _module.print(F("\""));
     if(number.charAt(0) == '+'){
         _module.print(F(",\"145\""));
     }else{ _module.print(F(",\"129\"")); }
-    _module.print(F(",\""+ name +"\"\r\n"));
+    _module.print(F(",\""));
+    _module.print(name);
+    _module.print(F("\"\r\n"));
     _buffer = _read();
     return _ack();
 }
