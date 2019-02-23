@@ -12,11 +12,11 @@
 #include <Arduino.h>
 #endif
 
-#define DEBUG
+// #define DEBUG
 
 #define SS
-#define RX 7   // 10
-#define TX 8   // 11
+#define RX 10   // 10
+#define TX 11   // 11
 #define BAUD 9600
 
 typedef struct {
