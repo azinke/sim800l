@@ -1,4 +1,3 @@
 # Sim800L
 
-
-*on progress*
+Arduino compatible library for SIM800L GSM modem
